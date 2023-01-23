@@ -1,8 +1,11 @@
+
 <script src="./script.js" />
+
+
 <style scoped src="./style.css"/>
 
 <template>
-    <div class="flx-space-btw flx-c c-border product-card">
+    <div @click="viewProduct" class="flx-space-btw flx-c c-border product-card">
         <img :src="'http://localhost:5000/images/small/' + product.image" />
         <div>{{ product.name }}</div>
         <div>
@@ -11,6 +14,6 @@
                 <span>{{ product.unit_value }} {{ product.unit_type }}</span>
             </div>
         </div>
-        <button>+</button>
+        <AddToCartBtn :product="product"/>
     </div>
 </template>

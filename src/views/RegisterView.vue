@@ -2,7 +2,7 @@
     import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 </script>
 <template>
-    <div class="login-container">
+    <div class="container">
       <form @submit.prevent="register">
         <input type='email' name='email' placeholder='Email' required />
         <input type='password' name='password' placeholder='Lösenord' required minLength='6' maxLength='100' />

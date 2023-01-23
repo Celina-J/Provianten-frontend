@@ -3,7 +3,7 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 </script>
 
 <template>
-  <div class="register-container">
+  <div class="container">
     <form @submit.prevent="login">
       <input type='email' name='email' placeholder='Email' required />
       <input type='password' name='password' placeholder='Lösenord' required minLength='6' maxLength='100' />
@@ -40,7 +40,10 @@ export default {
             })
           })
             .then(resp => resp.json())
-            .then(resp => this.$router.push('/'))
+            .then(resp => {
+              document.cookie = 'session=' + resp.session;
+              this.$router.push('/');
+            })
             .catch(err => this.authMsg = 'Något gick fel, kunde inte logga in.');
         }).catch(err => this.authMsg = 'Felaktigt email eller lösenord!');
     }

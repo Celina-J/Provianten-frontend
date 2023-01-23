@@ -1,3 +1,4 @@
+
 .categories-container {
     position: absolute;
     width: 100%;
@@ -10,4 +11,12 @@
     height: 200px;
     flex-direction: column;
     flex-wrap: wrap;
+}
+
+.navbar-brand > img{
+    width: 400px;
+}
+
+.navbar{
+    padding: 0;
 }

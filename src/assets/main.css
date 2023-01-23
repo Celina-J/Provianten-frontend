@@ -1,6 +1,8 @@
 @import './base.css';
 
 .container {
+  display: flex;
+  flex-direction: column;
   max-width: 1280px;
   margin: auto;
   padding: 1em;
@@ -47,4 +49,25 @@
   object-fit: contain;
   max-width: 3000px;
   margin: auto;
+}
+
+.provianten-primary-btn{
+  background-color: var(--dark-green);
+  border: 1px solid var(--dark-green-hover);
+  border-radius: 2em;
+  color: white;
+  padding: .5em 2em;
+}
+
+.provianten-primary-btn:hover{
+  background-color: var(--dark-green-hover);
+  cursor: pointer;
+}
+
+.my-3{
+  margin: 3em 0;
+}
+
+.my-5{
+  margin: 5em 0;
 }
