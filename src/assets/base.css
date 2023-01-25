@@ -3,9 +3,8 @@
   --yellow: #FFDE8D;
   --light-green: #CDDE47;
   --dark-green: #528540;
+  --green-opacity: hsl(104, 24%, 88%, .3);
   --dark-green-hover: #4b773c;
-  --blue: #0081A7;
-  --red: #BF211E;
 }
 
 *,

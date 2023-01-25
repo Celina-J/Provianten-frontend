@@ -1,8 +1,7 @@
 <style scoped src="./style.css"/>
-<script src="./script.js" />
 
 <template>
-    <div class="container footer-container">
+    <div v-if="this.$route.path !== '/login' && this.$route.path !== '/register'" class="container footer-container">
         <footer class="py-3 my-4">
             <ul class="nav justify-content-center border-bottom pb-3 mb-3">
                 <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Hem</a></li>

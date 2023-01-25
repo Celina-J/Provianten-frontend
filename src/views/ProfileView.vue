@@ -66,7 +66,6 @@ import { getAuth } from "firebase/auth";
 export default {
     data() {
         return {
-            products: [],
             currentUser: null,
             userData: {
                 firstname: null,
@@ -97,10 +96,7 @@ export default {
                 })
 
             })
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data);
-                });
+                .then((response) => response.json());
         },
 
         getUserInfo() {

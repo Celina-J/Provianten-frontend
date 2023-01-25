@@ -38,8 +38,29 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: () => import('../views/AdminPageView.vue')
+    },
+    {
+      path: '/checkout',
+      name: 'checkout',
+      component: () => import('../views/CheckoutView.vue')
+    },
+    {
+      path: '/404-page',
+      name: '404-page',
+      component: () => import('../views/404PageView.vue')
+    },
+    {
+      path: '/search-page',
+      name: 'search-page',
+      component: () => import('../views/searchPageView.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: '404-page',
+      component: () => import('../views/404PageView.vue')
     }
   ]
 })
+
 
 export default router;

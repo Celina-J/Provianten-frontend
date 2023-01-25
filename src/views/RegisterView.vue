@@ -1,15 +1,22 @@
 <script setup>
-    import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 </script>
 <template>
-    <div class="container">
-      <form @submit.prevent="register">
-        <input type='email' name='email' placeholder='Email' required />
-        <input type='password' name='password' placeholder='Lösenord' required minLength='6' maxLength='100' />
-        <button type='submit'>Skapa konto</button>
-      </form>
+  <div class="body-overlay">
+      <div class="login-register-box">
+        <form @submit.prevent="register">
+          <label>Email</label>
+          <input class="my-2 form-control" type='email' name='email' placeholder='Email' required />
+          <label>Password</label>
+          <input class="my-2 form-control" type='password' name='password' placeholder='Lösenord' required minLength='6' maxLength='100' />
+          <div class="my-1 error-msg">{{ authMsg }}</div>
+          <button  class="my-1 btn btn-secondary" type='submit'>Skapa konto</button>
+          <div class="my-1">- eller -</div>
+          <RouterLink class="my-1 register-link" to="/login">Logga in</RouterLink>
+        </form>
+      </div>
     </div>
-  </template>
+</template>
 
 <script>
 export default {
@@ -37,13 +44,31 @@ export default {
             .then(resp => resp.json())
             .then(resp => this.$router.push('/'))
             .catch(err => this.authMsg = 'Något gick fel, kunde inte logga in.');
-        }).catch(err => this.authMsg = 'Felaktigt email eller lösenord!');
+        }).catch(err => this.authMsg = `Kontot "${e.target['email'].value}" existerar redan`);
     }
   }
 }
 </script>
 
-  
-  <style>
-  
-  </style>
+
+<style>
+  .login-register-box{
+    margin: auto;
+    position: relative;
+    top: 20%;
+    background-color: white;
+    border-radius: 1em;
+    max-width: 400px;
+    padding: 2em;
+    text-align: center;
+  }
+
+  .register-link{
+    color: #222;
+    text-decoration: none;
+  }
+
+  .error-msg{
+    color: red;
+  }
+</style>

@@ -1,4 +1,5 @@
 <script setup>
+import AddToCartBtn from '../components/AddToCartBtn/AddToCartBtn.vue';
 import RandomProducts from '../components/RandomProducts/RandomProducts.vue';
 
 
@@ -21,7 +22,7 @@ import RandomProducts from '../components/RandomProducts/RandomProducts.vue';
 
             <div class="buy-container flx-space-btw my-5">
                 <h4>{{ product.price }} kr</h4>
-                <button class="provianten-primary-btn"><b>Lägg i varukorg</b></button>
+                <button @click="addToLocalstore()" class="provianten-primary-btn"><b>Lägg i varukorg</b></button>
             </div>
 
             <div style="padding: 0" class="flx-c my-5">
@@ -52,8 +53,9 @@ export default {
     },
 
     components: {
-        RandomProducts
-    },
+    RandomProducts,
+    AddToCartBtn
+},
 
     watch: {
         id() {
@@ -66,9 +68,24 @@ export default {
             fetch("http://localhost:5000/api/product?id=" + this.id)
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data[0]);
                     this.product = data[0];
                 });
+        },
+
+        addToLocalstore(){
+            let cart = JSON.parse(localStorage.getItem('cart'));
+
+            let existingItem = cart.find(i => i.id === this.product.id);
+            
+            if(existingItem === undefined){
+                let itemToAdd = {id: this.product.id, qty: 1};   
+                cart.push(itemToAdd);
+            }else{
+                existingItem.qty++;
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart)); 
+            document.dispatchEvent(new CustomEvent('cartUpdate'));
         }
     },
 
@@ -101,7 +118,7 @@ export default {
 }
 
 .buy-container {
-    background-color: #F8F9FA;
+    background-color: var(--green-opacity);
     align-items: center;
     padding: 1em;
 }

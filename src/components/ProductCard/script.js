@@ -18,6 +18,10 @@ export default {
             if(e.target.__vueParentComponent.attrs.class === 'add-to-cart-btn')
                 return;
                 this.$router.push('/product?id=' + this.product.id);
+        },
+
+        editProduct(){
+            this.$router.push('/admin?productId=' + this.product.id);
         }
     },
 

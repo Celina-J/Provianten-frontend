@@ -2,14 +2,15 @@ import { getAuth } from "firebase/auth";
 import CartModal from '../CartModal/CartModal.vue';
 
 export default {
-    //Dynamiska variablar med states
+    
     data() {
         return {
             categories: [],
             showCategories: false,
             url: window.location.pathname,
             currentUser: null,
-            cart: []
+            cart: [],
+            searchValue: ''
         }
     },
 
@@ -17,7 +18,6 @@ export default {
         CartModal
     },
 
-    //Funktioner som kan användas i html
     methods: {
         getCategories() {
             fetch('http://localhost:5000/api/categories')
@@ -32,13 +32,24 @@ export default {
         },
 
         signOut() {
-            console.log('logging out');
             document.cookie = 'session=';
             getAuth().signOut();
             this.$router.push('/');
-        }
+        },
+
+        //Click event, sends user to page with the searchvalue in the url
+        submitSearch(){
+            if(this.searchValue.length < 3)
+                return;
+            
+            this.$router.push('/search-page?search=' + this.searchValue)
+            .then(() => {
+                this.$router.go();
+            });
+        },
+
     },
-    //Lifecycle när komponenten laddas in vid refreash
+
     mounted() {
 
         let cart = localStorage.getItem('cart');
@@ -50,7 +61,7 @@ export default {
 
         this.getCategories();
 
-        //Ska inkluderas på alla KOMPONENTER som kräver inloggning
+
         getAuth().onAuthStateChanged((authState) => {
             if (!authState) return this.currentUser = null;
 

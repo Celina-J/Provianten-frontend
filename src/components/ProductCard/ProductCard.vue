@@ -15,5 +15,6 @@
             </div>
         </div>
         <AddToCartBtn :product="product"/>
+        <BootstrapIcon @click="editProduct" icon="pencil" class="add-to-cart-btn" ></BootstrapIcon>
     </div>
 </template>

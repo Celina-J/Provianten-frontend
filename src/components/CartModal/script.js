@@ -11,12 +11,14 @@ export default {
     methods: {
         getCart() {
             this.cartItems = JSON.parse(localStorage.getItem('cart'));
+            if (this.cartItems === null)
+                return;
             this.cartItemIdArr = this.cartItems.map(row => row.id);
         },
 
         fetchData() {
 
-            if(this.cartItemIdArr < 1)
+            if (this.cartItemIdArr < 1)
                 return;
 
             fetch('http://localhost:5000/api/get-products-by-ids', {
@@ -35,7 +37,6 @@ export default {
                         row.qty = cartItem.qty;
                         return row;
                     });
-                    console.log(this.products);
                 });
         },
 
@@ -78,7 +79,7 @@ export default {
     mounted() {
         this.getCart();
         this.fetchData();
-        
+
         document.addEventListener('cartUpdate', (e) => {
             this.getCart();
             this.fetchData();
