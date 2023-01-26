@@ -26,11 +26,14 @@ export default {
     },
     methods: {
         searchProducts() {
+
+            if(!this.$route.query.search)
+                this.$router.push('/404-page');
+
             fetch("http://localhost:5000/api/search-products?search=" + this.search)
                 .then((response) => response.json())
                 .then((data) => {
                     this.searchResult = data;
-                    console.log(data);
                 });
         },
     },

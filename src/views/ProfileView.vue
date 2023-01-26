@@ -9,16 +9,19 @@ import { getAuth } from "firebase/auth";
         <form @submit.prevent="submitForm">
             <div class="my-3 row g-2">
                 <div class="col-sm">
-                    <input v-model="userData.firstname" type="text" name="firstname" class="form-control" placeholder="Förnamn">
+                    <input v-model="userData.firstname" type="text" name="firstname" class="form-control"
+                        placeholder="Förnamn">
                 </div>
                 <div class="col-sm">
-                    <input v-model="userData.lastname" type="text" name="lastname" class="form-control" placeholder="Efternamn">
+                    <input v-model="userData.lastname" type="text" name="lastname" class="form-control"
+                        placeholder="Efternamn">
                 </div>
             </div>
 
             <div class="my-3 row g-1">
                 <div class="col-sm">
-                    <input v-model="userData.street_address" type="text" name="street_address" class="form-control" placeholder="Adress">
+                    <input v-model="userData.street_address" type="text" name="street_address" class="form-control"
+                        placeholder="Adress">
                 </div>
             </div>
 
@@ -81,6 +84,30 @@ export default {
 
     methods: {
 
+        getUserInfo() {
+            let headers = new Headers({
+                'sessioncookie': document.cookie,
+                'Content-Type': 'application/json'
+            })
+
+            fetch('http://localhost:5000/api/user/user?id=' + this.currentUser?.uid, {
+                headers: headers
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    let tempObj = {};
+
+                    //populates the object userData with data from the fetch
+                    Object.keys(this.userData).forEach(key => {
+                        tempObj[key] = data[0][key];
+                    });
+
+                    this.userData = tempObj;
+                    console.log(data);
+
+                });
+        },
+
         saveUserInfo() {
             let headers = new Headers({
                 'sessioncookie': document.cookie,
@@ -89,52 +116,36 @@ export default {
 
             fetch('http://localhost:5000/api/user', {
                 headers: headers,
-                method: 'POST',
+                method: 'PUT',
                 body: JSON.stringify({
-                    id: this.currentUser.uid,
-                    userData: this.userData
+                    userData: this.userData,
+                    id: this.currentUser.uid
                 })
 
             })
-                .then((response) => response.json());
-        },
-
-        getUserInfo() {
-            let headers = new Headers({
-                'sessioncookie': document.cookie,
-                'Content-Type': 'application/json'
-            })
-
-            fetch('http://localhost:5000/api/user?id=' + this.currentUser?.uid, {
-                headers: headers
-            })
                 .then((response) => response.json())
-                .then((data) => {
-                    let tempObj = {};
-
-                   Object.keys(this.userData).forEach(key=>{
-                        tempObj[key] = data[0][key];
-                   });
-
-                   this.userData = tempObj;
-
-                });
+                .then(data => console.log(data));
         },
 
-        submitForm(e) {
+
+        submitForm() {
             this.saveUserInfo();
+
+            this.$router.push('/profile')
+            .then(this.$router.go('profile'));
         }
 
     },
     mounted() {
+
+        //Firebase auth to check if a user is logged in and
+        //if so saves user into a variable
         getAuth().onAuthStateChanged((authState) => {
             if (!authState) return this.currentUser = null;
 
             this.currentUser = authState.auth.currentUser;
             this.getUserInfo();
         });
-
-
 
     }
 }

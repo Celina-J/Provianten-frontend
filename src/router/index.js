@@ -52,12 +52,27 @@ const router = createRouter({
     {
       path: '/search-page',
       name: 'search-page',
-      component: () => import('../views/searchPageView.vue')
+      component: () => import('../views/SearchPageView.vue')
+    },
+    {
+      path: '/order-complete',
+      name: 'order-complete',
+      component: () => import('../views/OrderCompleteView.vue')
+    },
+    {
+      path: '/order-page',
+      name: 'order-page',
+      component: () => import('../views/OrderPageView.vue')
+    },
+    {
+      path: '/order-details',
+      name: 'order-details',
+      component: () => import('../views/OrderDetailsView.vue')
     },
     {
       path: '/:pathMatch(.*)*',
-      name: '404-page',
-      component: () => import('../views/404PageView.vue')
+      name: 'page-not-found',
+      component: () => import('../views/PageNotFoundView.vue')
     }
   ]
 })

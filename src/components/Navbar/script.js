@@ -19,6 +19,7 @@ export default {
     },
 
     methods: {
+
         getCategories() {
             fetch('http://localhost:5000/api/categories')
                 .then((response) => response.json())
@@ -27,6 +28,7 @@ export default {
                 });
         },
 
+        //Toggles the menubar in navbar for categories
         toggleCategories() {
             this.showCategories = !this.showCategories;
         },
@@ -56,23 +58,24 @@ export default {
         if (cart === null)
             localStorage.setItem('cart', JSON.stringify([]));
 
-
         this.cart = JSON.parse(localStorage.getItem('cart'));
 
         this.getCategories();
 
-
+        //Firebase auth to check if a user is logged in and
+        //if so saves user into a variable
         getAuth().onAuthStateChanged((authState) => {
             if (!authState) return this.currentUser = null;
 
             this.currentUser = authState.auth.currentUser;
         });
 
+        //Custom event that triggers the cart to update on change
         document.addEventListener('cartUpdate', (e) => {
             this.cart = JSON.parse(localStorage.getItem('cart'));
         })
     },
-
+    
     beforeUpdate() {
         this.url = window.location.pathname;
     }

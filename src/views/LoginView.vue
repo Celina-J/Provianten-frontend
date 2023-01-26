@@ -31,6 +31,7 @@ export default {
     login(e) {
       this.authMsg = '';
 
+      //Firebase auth login
       signInWithEmailAndPassword(this.auth, e.target['email'].value, e.target['password'].value)
         .then(user => {
           fetch('http://localhost:5000/api/sessionlogin', {

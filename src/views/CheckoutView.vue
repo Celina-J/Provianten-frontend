@@ -36,12 +36,12 @@ import RandomProducts from "../components/RandomProducts/RandomProducts.vue";
                 <div class="my-3 row g-2">
                     <div class="col-sm">
                         <label><b>Förnamn</b></label>
-                        <input v-model="userData.firstname" type="text" name="firstname" class="form-control"
+                        <input required v-model="userData.firstname" type="text" name="firstname" class="form-control"
                             placeholder="Förnamn">
                     </div>
                     <div class="col-sm">
                         <label><b>Efternamn</b></label>
-                        <input v-model="userData.lastname" type="text" name="lastname" class="form-control"
+                        <input required v-model="userData.lastname" type="text" name="lastname" class="form-control"
                             placeholder="Efternamn">
                     </div>
                 </div>
@@ -49,19 +49,20 @@ import RandomProducts from "../components/RandomProducts/RandomProducts.vue";
                 <div class="my-3 row g-1">
                     <div class="col-sm">
                         <label><b>Adress</b></label>
-                        <input v-model="userData.street_address" type="text" name="street_address" class="form-control"
-                            placeholder="Adress">
+                        <input required v-model="userData.street_address" type="text" name="street_address"
+                            class="form-control" placeholder="Adress">
                     </div>
                 </div>
 
                 <div class="my-3 row g-2">
                     <div class="col-sm">
                         <label><b>Ort</b></label>
-                        <input v-model="userData.city" type="text" name="city" class="form-control" placeholder="Ort">
+                        <input required v-model="userData.city" type="text" name="city" class="form-control"
+                            placeholder="Ort">
                     </div>
                     <div class="col-sm">
                         <label><b>Postnummer</b></label>
-                        <input v-model="userData.zip" type="text" name="zip" class="form-control"
+                        <input required v-model="userData.zip" type="text" name="zip" class="form-control"
                             placeholder="Postnummer">
                     </div>
                 </div>
@@ -69,7 +70,7 @@ import RandomProducts from "../components/RandomProducts/RandomProducts.vue";
                 <div class="my-3 row g-2">
                     <div class="col-sm">
                         <label><b>Telefon</b></label>
-                        <input v-model="userData.phone" type="text" name="phone" class="form-control"
+                        <input required v-model="userData.phone" type="text" name="phone" class="form-control"
                             placeholder="Telefon">
                     </div>
                     <div class="col-sm">
@@ -122,11 +123,13 @@ export default {
                 "sessioncookie": document.cookie,
                 "Content-Type": "application/json"
             });
-            fetch("http://localhost:5000/api/user?id=" + this.currentUser?.uid, {
+            fetch("http://localhost:5000/api/user/user?id=" + this.currentUser?.uid, {
                 headers: headers
             })
                 .then((response) => response.json())
                 .then((data) => {
+
+                    //populates the object productData with data from the fetch
                     let tempObj = {};
                     Object.keys(this.userData).forEach(key => {
                         tempObj[key] = data[0][key];
@@ -151,6 +154,7 @@ export default {
                 .then((response) => response.json());
         },
 
+        //Fetching products with multiple id:s 
         fetchData() {
             if (this.cartItemIdArr < 1)
                 return;
@@ -219,11 +223,18 @@ export default {
         },
 
         createOrder() {
+
+            if (!this.currentUser)
+                return;
+
+            let headers = new Headers({
+                'sessioncookie': document.cookie,
+                'Content-Type': 'application/json'
+            })
+
             fetch("http://localhost:5000/api/orders", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: headers,
                 body: JSON.stringify({
                     customer_id: this.currentUser.uid,
                     street_address: this.userData.street_address,
@@ -239,24 +250,28 @@ export default {
                     localStorage.clear();
 
                     this.$router.push('/order-complete')
-                    .then(() => this.$router.go('/order-complete'));
-                });
+                        .then(() => this.$router.go('/order-complete'));
+                }).catch(err => console.log(err));
         }
 
     },
 
     mounted() {
 
+        //Firebase auth to check if a user is logged in and
+        //if so saves user into a variable
         getAuth().onAuthStateChanged((authState) => {
             if (!authState)
                 return this.currentUser = null;
             this.currentUser = authState.auth.currentUser;
+
             this.getUserInfo();
         });
 
         this.getCart();
         this.fetchData();
 
+        //Custom event that triggers the cart to update on change
         document.addEventListener("cartUpdate", (e) => {
             this.getCart();
             this.fetchData();

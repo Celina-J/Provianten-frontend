@@ -25,7 +25,7 @@
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li>
-                                <RouterLink class="link dropdown-item" to="#">Ordrar</RouterLink>
+                                <RouterLink class="link dropdown-item" to="/order-page">Ordrar</RouterLink>
                             </li>
                             <li>
                                 <RouterLink class="link dropdown-item" to="/profile">Profil</RouterLink>

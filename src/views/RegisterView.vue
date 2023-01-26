@@ -29,6 +29,8 @@ export default {
   methods: {
     register(e) {
       this.authMsg = '';
+
+      //Register user with firebase auth
       createUserWithEmailAndPassword(this.auth, e.target['email'].value, e.target['password'].value)
         .then(user => {
           fetch('http://localhost:5000/api/sessionlogin', {

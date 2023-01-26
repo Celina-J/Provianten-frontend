@@ -65,6 +65,10 @@ export default {
 
     methods: {
         getProduct() {
+
+            if(!this.$route.query.id)
+                this.$router.push('/404-page');
+
             fetch("http://localhost:5000/api/product?id=" + this.id)
                 .then((response) => response.json())
                 .then((data) => {
@@ -77,6 +81,8 @@ export default {
 
             let existingItem = cart.find(i => i.id === this.product.id);
             
+            //Checks if the clicked product exists in localstorage
+            //if so add a new product else increase quantity
             if(existingItem === undefined){
                 let itemToAdd = {id: this.product.id, qty: 1};   
                 cart.push(itemToAdd);
@@ -85,6 +91,8 @@ export default {
             }
 
             localStorage.setItem('cart', JSON.stringify(cart)); 
+
+            //Custom event that triggers the cart to update on change
             document.dispatchEvent(new CustomEvent('cartUpdate'));
         }
     },

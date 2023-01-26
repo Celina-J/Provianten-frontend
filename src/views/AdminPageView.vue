@@ -144,7 +144,7 @@ export default {
                 'sessioncookie': document.cookie,
                 'Content-Type': 'application/json'
             })
-            fetch('http://localhost:5000/api/users', {
+            fetch('http://localhost:5000/api/user/a/all-users', {
                 headers: headers
             })
                 .then((response) => response.status === 200 ? response.json() : this.$router.push('/404-page'))
@@ -169,13 +169,14 @@ export default {
                 }).catch(err => console.log(err));
         },
 
+        //Allows admin to change users role
         toggleAdmin(user) {
             console.log(user);
             let headers = new Headers({
                 'sessioncookie': document.cookie,
                 'Content-Type': 'application/json'
             })
-            fetch('http://localhost:5000/api/user', {
+            fetch('http://localhost:5000/api/user/a', {
                 method: 'PUT',
                 headers: headers,
                 body: JSON.stringify({
@@ -186,10 +187,11 @@ export default {
                 .then((response) => response.status === 200 ? response.json() : false)
                 .then(() => {
                     this.$router.push('/admin')
-                    .then(() => this.$router.go('/admin'))
+                        .then(() => this.$router.go('/admin'))
                 }).catch(err => console.log(err));
         },
 
+        //Click event, sends down category object from form
         changeCatName(category) {
             this.selectedCat = category;
         },
@@ -209,6 +211,8 @@ export default {
             })
                 .then((response) => response.status === 200 ? response.json() : false)
                 .then((data) => {
+                    this.$router.push('/admin')
+                        .then(this.$router.go());
                 }).catch(err => console.log(err));
         },
 
@@ -221,6 +225,7 @@ export default {
                 .then((response) => response.json())
                 .then((data) => {
 
+                    //populates the object productData with data from the fetch
                     let tempObj = {};
 
                     Object.keys(this.productData).forEach(key => {
@@ -270,11 +275,12 @@ export default {
     },
     mounted() {
 
+        //Firebase auth to check if a user is logged in and
+        //if so saves user into a variable
         getAuth().onAuthStateChanged((authState) => {
             if (!authState) return this.currentUser = null;
 
             this.currentUser = authState.auth.currentUser;
-            console.log(this.currentUser);
         });
 
         this.getUsers();

@@ -9,6 +9,8 @@ export default {
 
 
     methods: {
+        //Populates variable cartItemIdArr with products in localstorage
+        //And then maps it into a new varible cartItems
         getCart() {
             this.cartItems = JSON.parse(localStorage.getItem('cart'));
             if (this.cartItems === null)
@@ -18,6 +20,7 @@ export default {
 
         fetchData() {
 
+            //Fetching data only if there is any products 
             if (this.cartItemIdArr < 1)
                 return;
 
@@ -32,6 +35,7 @@ export default {
                 .then((response) => response.json())
                 .then((data) => {
 
+                    //merging in qty from local storage into the products array
                     this.products = data.map(row => {
                         let cartItem = this.cartItems.find(cRow => cRow.id === row.id);
                         row.qty = cartItem.qty;
@@ -40,6 +44,7 @@ export default {
                 });
         },
 
+        //Click event - increases item in cart by 1
         increaseQty(product) {
             let cart = JSON.parse(localStorage.getItem('cart'));
 
@@ -52,6 +57,7 @@ export default {
             document.dispatchEvent(new CustomEvent('cartUpdate'));
         },
 
+        //Click event - decreases item in cart by 1
         decreaseQty(product) {
             let cart = JSON.parse(localStorage.getItem('cart'));
 
@@ -70,16 +76,11 @@ export default {
         }
     },
 
-
-    props: {
-
-    },
-
-
     mounted() {
         this.getCart();
         this.fetchData();
 
+        //Custom event that triggers the cart to update on change
         document.addEventListener('cartUpdate', (e) => {
             this.getCart();
             this.fetchData();

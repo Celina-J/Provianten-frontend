@@ -11,7 +11,7 @@ import RandProducts from '../components/RandomProducts/RandomProducts.vue';
   <div class="container">
     <h2 class="my-3">Nyheter</h2>
     <RandProducts />
-    
+
     <div class="flx-c banner my-5">
       <div class="icon-c flx-space-btw">
         <BootstrapIcon icon="truck" size="4x"></BootstrapIcon>
@@ -37,7 +37,7 @@ import RandProducts from '../components/RandomProducts/RandomProducts.vue';
     </div>
 
     <img class="design-img my-3" src="images/design/hero.png" />
-    
+
     <h2 class="my-3">Mer gott</h2>
     <div class="my-3 grid-c">
       <ProductCard :product="p" v-for="p in products" :key="p.id" />
@@ -52,7 +52,8 @@ import RandProducts from '../components/RandomProducts/RandomProducts.vue';
 export default {
   data() {
     return {
-      products: []
+      products: [],
+      currentUser: null
     }
   },
 
@@ -61,6 +62,7 @@ export default {
   },
 
   methods: {
+
     getProducts() {
       fetch('http://localhost:5000/api/products')
         .then((response) => response.json())
@@ -73,7 +75,8 @@ export default {
       window.scroll(0, 0);
     }
   },
-  mounted() {
+
+  mounted(){
     this.getProducts();
   }
 }
@@ -93,7 +96,7 @@ export default {
   padding: 1em;
 }
 
-.icon-c{
+.icon-c {
   align-items: center;
   gap: 1em;
 }

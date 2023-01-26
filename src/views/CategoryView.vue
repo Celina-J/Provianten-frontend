@@ -1,6 +1,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import ProductCard from '../components/ProductCard/ProductCard.vue';
+import { getAuth } from "firebase/auth";
 </script>
 
 <template>
@@ -8,7 +9,7 @@ import ProductCard from '../components/ProductCard/ProductCard.vue';
         <h1>{{ category.name }}</h1>
         <h6>{{ productAmount }} produkter</h6>
         <div class="grid-c">
-            <ProductCard :product="i" v-for="i in productsByCat" v-bind:key="i.id" />
+            <ProductCard :is_admin="is_admin || 0" :product="i" v-for="i in productsByCat" v-bind:key="i.id" />
         </div>
         <div class="flx-center">
             <button class="my-5 provianten-primary-btn" @click="getMoreProducts()">Visa mer</button>
@@ -27,17 +28,48 @@ export default {
             productAmount: 0,
             category: [],
             id: this.$route.query.id,
-            page: 1
+            page: 1,
+            is_admin: false
         };
     },
+
+    //watches for changes to the id variable ^
     watch: {
         id(newVal, oldVal) {
             this.getProductsByCat();
             this.getCategory();
         }
     },
+
     methods: {
+
+        getUser() {
+
+            if (!this.currentUser)
+                return;
+
+            let headers = new Headers({
+                'sessioncookie': document.cookie,
+                'Content-Type': 'application/json'
+            })
+
+            fetch('http://localhost:5000/api/user/a', {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    id: this.currentUser.uid
+                })
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    this.is_admin = data[0].is_admin;
+                });
+        },
+
         getProductsByCat() {
+            if(!this.$route.query.id)
+                this.$router.push('/404-page');
+                
             this.page = 1;
 
             fetch(`http://localhost:5000/api/products-by-cat?id=${this.id}&page=1`)
@@ -56,6 +88,7 @@ export default {
                 });
         },
 
+        //Pagination
         getMoreProducts() {
             this.page++;
 
@@ -76,7 +109,19 @@ export default {
     },
 
     mounted() {
-        this.getProductsByCat();
+
+        //Firebase auth to check if a user is logged in and
+        //if so saves user into a variable
+        getAuth().onAuthStateChanged((authState) => {
+            this.getProductsByCat();
+
+            if (!authState) return this.currentUser = null;
+
+            this.currentUser = authState.auth.currentUser;
+
+            this.getUser();
+        });
+
         this.getCategory();
     },
 
