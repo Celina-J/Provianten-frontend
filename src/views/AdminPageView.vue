@@ -201,7 +201,7 @@ export default {
                 'sessioncookie': document.cookie,
                 'Content-Type': 'application/json'
             })
-            fetch('http://localhost:5000/api/category', {
+            fetch('http://localhost:5000/api/category/a', {
                 method: 'PUT',
                 headers: headers,
                 body: JSON.stringify({
@@ -221,7 +221,7 @@ export default {
             if (!this.$route.query.productId)
                 return;
 
-            fetch("http://localhost:5000/api/product?id=" + this.productId)
+            fetch("http://localhost:5000/api/product?id=" + this.productId + "/a")
                 .then((response) => response.json())
                 .then((data) => {
 
@@ -241,7 +241,7 @@ export default {
                 'sessioncookie': document.cookie,
                 'Content-Type': 'application/json'
             })
-            fetch('http://localhost:5000/api/product', {
+            fetch('http://localhost:5000/api/product/a', {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({
